@@ -1,0 +1,163 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# Python Logistic Regression Project
+# 
+# source: pierian data, data source( kaggle.com)
+# 
+# File name: advertising .csv
+
+# 1) Importing Libraries:
+
+# In[65]:
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# 2) Importing data: Creat a file name ad_data and import advertising.csv data under that Data frame by using Pandas
+
+# In[66]:
+
+
+ad_data = pd.read_csv("advertising.csv")
+
+
+# 3) Exploring parameters and stats of data set by using .head(), .describe() and .info() functions
+
+# In[67]:
+
+
+ad_data.head()
+
+
+# In[68]:
+
+
+ad_data.describe()
+
+
+# In[69]:
+
+
+ad_data.info()
+
+
+# 4) Exploratory data analysis plots, visualization and comparision by using seaborn library:
+
+# In[70]:
+
+
+ad_data["Age"].plot.hist(bins=30) # Histogram of Age
+
+
+# In[71]:
+
+
+sns.jointplot(x="Age",y="Area Income", data= ad_data)# joint plot of Age and Area Income
+
+
+# In[72]:
+
+
+#KDE plot of Age and Daily Time Spent on Site
+
+sns.jointplot(x="Age",y="Daily Time Spent on Site", data= ad_data, kind="kde", color="red")
+
+
+# In[73]:
+
+
+# joint plot Daily Time Spent on Site and Daily internet Usage
+
+sns.jointplot(x="Daily Time Spent on Site",y="Daily Internet Usage", data= ad_data)
+
+
+# In[86]:
+
+
+# Pairplot with hue defined by "Clicked on Ad" coloumn feature
+
+sns.pairplot(ad_data, hue="Clicked on Ad")
+
+
+# ---------
+
+# 5) Logistic Regression: by using Scikit-learn as sklearn library
+#     
+
+# a) Split data into train set and test set
+
+# In[75]:
+
+
+from sklearn.model_selection import train_test_split
+
+
+# In[76]:
+
+
+ad_data.columns
+
+
+# In[77]:
+
+
+# x= all numeric columns ,y= target columns
+
+x = ad_data[["Daily Time Spent on Site","Age","Area Income","Daily Internet Usage", "Male"]]
+y = ad_data['Clicked on Ad']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=101)
+
+# Now data is split into train set and test set
+
+
+# b) Train and fit Logistic Regression on training set by using LogisticRegression from sklearn.linear_model library
+
+# In[78]:
+
+
+from sklearn.linear_model import LogisticRegression
+
+
+# In[84]:
+
+
+logmodel = LogisticRegression()
+logmodel.fit(x_train, y_train)
+
+
+# ------
+
+# 6) Prediction and Evaluation by using sklearn.matrics
+
+# a) Predict values for testing data
+
+# In[80]:
+
+
+prediction = logmodel.predict(x_test)
+
+
+# b) Creat classification report for the model
+
+# In[81]:
+
+
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+
+
+# In[82]:
+
+
+print(classification_report(y_test, prediction))
+print(confusion_matrix(y_test, prediction))
+
+
+#  HAPPY CODING !!!
